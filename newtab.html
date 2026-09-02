@@ -38,7 +38,7 @@
   <div id="clock">
     <div id="clock-time">--:--</div>
     <div id="clock-date"></div>
-    <div id="clock-greeting">Good morning, Sky!</div>
+    <div id="clock-greeting" title="Click to change name">Good morning!</div>
   </div>
 
   <!-- TODO list -->
@@ -55,6 +55,18 @@
   </div>
 
   <div id="caption" class="hidden"></div>
+
+  <!-- Name prompt (first run) -->
+  <div id="name-prompt" class="overlay hidden">
+    <div class="card">
+      <h1>Welcome</h1>
+      <p>What should we call you? It will appear in your greeting.</p>
+      <input type="text" id="name-input" placeholder="Your name" maxlength="30" />
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn" id="name-save">Save</button>
+      </div>
+    </div>
+  </div>
 
   <!-- First run -->
   <div id="first-run" class="overlay hidden">
@@ -83,6 +95,10 @@
   <!-- Settings -->
   <div id="settings-panel" class="hidden">
     <h2>Settings</h2>
+    <div class="row">
+      <label for="user-name">Name</label>
+      <input type="text" id="user-name" placeholder="Your name" maxlength="30" />
+    </div>
     <div id="folder-settings">
       <div class="folder-box">Image folder: <span id="folder-name">Not selected</span></div>
       <div class="row">

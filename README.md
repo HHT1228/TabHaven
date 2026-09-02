@@ -15,11 +15,11 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 - Fast startup thanks to a cached image index and a cached thumbnail placeholder (no black flash).
 
 ### Widgets
-- 🕐 **Clock** — 24-hour time, date (English, with GMT offset), and a greeting that changes at noon.
+- 🕐 **Clock** — 24-hour time, date (English, with GMT offset), and a personalized greeting ("Good morning, {name}!") that changes at noon.
 - 🌤️ **Weather** — current conditions and today's hourly forecast (English), based on your **device** location (not IP), via [WeatherAPI.com](https://www.weatherapi.com/).
 - 🌅 **Sunrise / Sunset** — "Sunset in X hours" or "Sunrise in X hours" with the exact time.
 - 🧮 **Personal OA** — a daily work-hours tracker: enter Arrive/Leave, press **Sign-off**, and it accumulates Daily & Weekly hours (Monday-based week). Lunch (12:00–13:00), pre-08:00, and post-21:30 time are handled automatically.
-- ✅ **TODO list** — frosted-glass panel; add, edit, check off (strikethrough), drag to reorder, delete. Persisted.
+- ✅ **TODO list** — frosted-glass panel; add, edit, check off (strikethrough), drag to reorder, delete, and clear all completed items in one click. Persisted.
 - 👁️ **Hide UI** — hide all widgets for a clean wallpaper; one click brings everything back.
 
 ### Design & privacy
@@ -37,13 +37,14 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 2. Open `edge://extensions` (Edge) or `chrome://extensions` (Chrome).
 3. Enable **Developer mode** (top-right toggle).
 4. Click **Load unpacked** and select the project folder (the one containing `manifest.json`).
-5. Open a new tab — you'll see the **Choose Background** dialog.
+5. Open a new tab — you'll be asked for your name, then to **Choose Background**.
 
 ---
 
 ## 📖 Usage
 
 ### First launch
+- Enter your **name** — it appears in the greeting ("Good morning, {name}!").
 - **Choose Folder** → enter folder mode and pick a local image folder.
 - **Fluid Color** → enter the animated gradient mode (no folder required).
 
@@ -51,8 +52,11 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 - Open a new tab for a fresh random wallpaper (folder mode) or a new gradient (Fluid mode).
 - Press `⏭` (bottom-left) or the keyboard shortcut `R` to randomize the background.
 - Press `⚙` to open **Settings**:
+  - Change your **name** (also shown in the greeting).
   - Switch between **Folder** and **Fluid Color**.
   - (Folder mode) change folder, include subfolders, show filename.
+- Click the greeting to quickly open Settings and edit your name.
+- In the TODO list, click `+` to add an item and `⌧` to clear all completed items.
 - Press `⛶` to hide/show all widgets for a clean view.
 
 ### Personal OA (work-hours tracker)

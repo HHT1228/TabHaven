@@ -9,6 +9,7 @@ const KEY_HANDLE = 'directoryHandle';
 const KEY_RECURSIVE = 'recursive';
 const KEY_SHOW_NAME = 'showName';
 const KEY_BG_MODE = 'bgMode';
+const KEY_USER_NAME = 'userName';
 
 const IMAGE_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'avif', 'svg']);
 const SKIP_DIRS = new Set(['$recycle.bin', 'system volume information', 'node_modules', '.git']);
@@ -22,6 +23,7 @@ let currentObjectUrl = null;
 let currentCacheUrl = null;
 let captionTimer = null;
 let bgMode = null;   // 'folder' | 'fluid' | null
+let userName = '';   // 用户称呼（显示在问候语里）
 
 /* ================= DOM ================= */
 const img = document.getElementById('bg-image');
@@ -54,6 +56,10 @@ const hideUiBtn = document.getElementById('hide-ui-btn');
 const btnCloseSettings = document.getElementById('close-settings');
 const chooseFluidBtn = document.getElementById('choose-fluid');
 const switchModeBtn = document.getElementById('switch-mode');
+const namePromptEl = document.getElementById('name-prompt');
+const nameInputEl = document.getElementById('name-input');
+const nameSaveBtn = document.getElementById('name-save');
+const userNameInputEl = document.getElementById('user-name');
 
 /* ================= IndexedDB ================= */
 function openDB() {
@@ -140,7 +146,31 @@ function pad2(n) {
 }
 
 function greetingForHour(hour) {
-  return hour < 12 ? 'Good morning, Sky!' : 'Good evening, Sky!';
+  const part = hour < 12 ? 'Good morning' : 'Good evening';
+  return userName ? part + ', ' + userName + '!' : part + '!';
+}
+
+function setUserName(val) {
+  userName = val;
+  kvSet(KEY_USER_NAME, userName);
+  updateClock();
+  if (userNameInputEl) userNameInputEl.value = userName;
+}
+
+function showNamePrompt() {
+  namePromptEl.classList.remove('hidden');
+  if (nameInputEl) {
+    nameInputEl.value = userName;
+    setTimeout(() => nameInputEl.focus(), 0);
+  }
+}
+
+function saveName() {
+  setUserName((nameInputEl.value || '').trim());
+  namePromptEl.classList.add('hidden');
+  if (bgMode === null) {
+    firstRun.classList.remove('hidden');
+  }
 }
 
 function formatDate(d) {
@@ -890,6 +920,15 @@ todoAdd.addEventListener('click', addTodo);
 todoClearDone.addEventListener('click', clearCompletedTodos);
 chooseFluidBtn.addEventListener('click', enterFluidMode);
 switchModeBtn.addEventListener('click', switchBgMode);
+nameSaveBtn.addEventListener('click', saveName);
+nameInputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') saveName();
+});
+userNameInputEl.addEventListener('change', () => setUserName(userNameInputEl.value.trim()));
+clockGreetingEl.addEventListener('click', () => {
+  settingsPanel.classList.remove('hidden');
+  if (userNameInputEl) userNameInputEl.focus();
+});
 
 chkRecursive.addEventListener('change', () => {
   kvSet(KEY_RECURSIVE, chkRecursive.checked);
@@ -1155,6 +1194,12 @@ async function initOa() {
 async function init() {
   bgMode = (await kvGet(KEY_BG_MODE)) || null;
 
+  // 加载用户称呼
+  const storedName = await kvGet(KEY_USER_NAME);
+  const namePromptNeeded = (storedName === undefined || storedName === null);
+  userName = namePromptNeeded ? '' : String(storedName);
+  if (userNameInputEl) userNameInputEl.value = userName;
+
   // 加载文件夹相关偏好
   const recursive = await kvGet(KEY_RECURSIVE);
   const showName = await kvGet(KEY_SHOW_NAME);
@@ -1175,13 +1220,18 @@ async function init() {
   // Personal OA：工作时间统计
   initOa();
 
+  // 首次使用：询问名字
+  if (namePromptNeeded) {
+    showNamePrompt();
+  }
+
   // 背景：按模式加载（folder / fluid / 首次选择）
   if (bgMode === 'fluid') {
     applyRandomGradient();
   } else if (bgMode === 'folder') {
     showCachedWallpaper();
     await showRandomImage();
-  } else {
+  } else if (!namePromptNeeded) {
     firstRun.classList.remove('hidden');
   }
 
