@@ -622,7 +622,7 @@ async function authorize() {
 }
 
 /* ================= 天气组件 ================= */
-const WEATHERAPI_KEY = 'YOUR_API_KEY'; // Set your WeatherAPI.com key here — do NOT commit a real key
+const WEATHERAPI_KEY = window.TABHAVEN_WEATHER_API_KEY || 'YOUR_API_KEY';
 const WEATHER_API = 'https://api.weatherapi.com/v1/forecast.json';
 const GEOLOCATE_TIMEOUT_MS = 10000;
 const WEATHER_CACHE_KEY = 'weatherCache2';
@@ -849,7 +849,7 @@ async function initWeather() {
 
 async function refreshWeather(cache, force = false) {
   if (!WEATHERAPI_KEY || WEATHERAPI_KEY === 'YOUR_API_KEY') {
-    renderWeatherError('Please set your WeatherAPI key in newtab.js (WEATHERAPI_KEY).');
+    renderWeatherError('Please set your WeatherAPI key in config.js (copy config.example.js).');
     return;
   }
 

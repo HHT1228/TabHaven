@@ -7,4 +7,4 @@ desktop.ini
 *.log
 
 # Local / secret files
-# (Keep your WeatherAPI key out of the repo. It lives in newtab.js as WEATHERAPI_KEY.)
+config.js

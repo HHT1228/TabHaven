@@ -74,10 +74,10 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 - On first use, the browser asks for location permission. It uses **device/OS location** (not IP), so it stays accurate even behind a proxy or VPN.
 - Weather data needs a free [WeatherAPI.com](https://www.weatherapi.com/signup.aspx) key:
   1. Register and copy your API key.
-  2. Open `newtab.js` and set `const WEATHERAPI_KEY = 'your_key_here';`.
+  2. Copy `config.example.js` to `config.js` and paste your key there.
   3. Reload the extension.
 
-> ⚠️ **Never commit a real API key.** `newtab.js` contains `WEATHERAPI_KEY = 'YOUR_API_KEY'` as a placeholder. If a key was ever committed, reset it in the WeatherAPI dashboard.
+> ⚠️ **Never commit a real API key.** Put it in `config.js`, which is gitignored. `config.example.js` (tracked) only contains a placeholder. If a key was ever committed, reset it in the WeatherAPI dashboard.
 
 ---
 
@@ -95,10 +95,11 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 
 ```
 tabhaven/
-├── manifest.json       # Manifest V3, new-tab override
-├── newtab.html         # Page markup & widget panels
-├── newtab.css          # Styles (frosted glass, layout)
-└── newtab.js           # All logic (background modes, widgets, persistence)
+├── manifest.json         # Manifest V3, new-tab override
+├── newtab.html           # Page markup & widget panels
+├── newtab.css            # Styles (frosted glass, layout)
+├── newtab.js             # All logic (background modes, widgets, persistence)
+└── config.example.js     # Template for your local WeatherAPI key (copy to config.js)
 ```
 
 ---
