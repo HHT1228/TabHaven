@@ -41,6 +41,7 @@ const clockGreetingEl = document.getElementById('clock-greeting');
 const todoListEl = document.getElementById('todo-list');
 const todoEmpty = document.getElementById('todo-empty');
 const todoAdd = document.getElementById('todo-add');
+const todoClearDone = document.getElementById('todo-clear-done');
 const weatherPanel = document.getElementById('weather-panel');
 const sunPanel = document.getElementById('sun-panel');
 
@@ -252,6 +253,17 @@ function renderTodo() {
     todoListEl.appendChild(createTodoItemEl(item));
   }
   updateTodoEmpty();
+}
+
+function clearCompletedTodos() {
+  const remaining = todoItems.filter((it) => !it.done);
+  if (remaining.length === todoItems.length) {
+    setStatus('No completed items to clear');
+    return;
+  }
+  todoItems = remaining;
+  todoSave();
+  renderTodo();
 }
 
 function addTodo() {
@@ -875,6 +887,7 @@ btnCloseSettings.addEventListener('click', () => settingsPanel.classList.add('hi
 gear.addEventListener('click', () => settingsPanel.classList.toggle('hidden'));
 hideUiBtn.addEventListener('click', toggleHideUi);
 todoAdd.addEventListener('click', addTodo);
+todoClearDone.addEventListener('click', clearCompletedTodos);
 chooseFluidBtn.addEventListener('click', enterFluidMode);
 switchModeBtn.addEventListener('click', switchBgMode);
 

@@ -355,7 +355,14 @@ input[type="checkbox"] {
   color: rgba(255, 255, 255, 0.85);
 }
 
-#todo-add {
+.todo-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#todo-add,
+#todo-clear-done {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -371,7 +378,12 @@ input[type="checkbox"] {
   transition: background 0.15s ease;
 }
 
-#todo-add:hover {
+#todo-clear-done {
+  font-size: 16px;
+}
+
+#todo-add:hover,
+#todo-clear-done:hover {
   background: rgba(255, 255, 255, 0.28);
 }
 

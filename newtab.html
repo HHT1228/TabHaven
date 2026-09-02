@@ -45,7 +45,10 @@
   <div id="todo-panel">
     <div id="todo-header">
       <span id="todo-title">TODO</span>
-      <button id="todo-add" type="button" title="Add item">+</button>
+      <div class="todo-header-actions">
+        <button id="todo-clear-done" type="button" title="Clear completed">⌧</button>
+        <button id="todo-add" type="button" title="Add item">+</button>
+      </div>
     </div>
     <div id="todo-empty">Click the + button to add a todo</div>
     <ul id="todo-list" class="hidden"></ul>
