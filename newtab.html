@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab</title>
+  <link rel="stylesheet" href="newtab.css" />
+</head>
+<body>
+  <img id="bg-cache" alt="" />
+  <img id="bg-image" alt="" />
+
+  <!-- Weather + Sunrise/Sunset + Personal OA -->
+  <div id="weather-stack">
+    <div id="weather-panel"></div>
+    <div id="sun-panel" class="hidden"></div>
+    <div id="oa-panel" class="hidden">
+      <div id="oa-title">Personal OA</div>
+      <div id="oa-row">
+        <label>Arrive
+          <input type="time" id="oa-start" />
+        </label>
+        <label>Leave
+          <input type="time" id="oa-end" />
+        </label>
+      </div>
+      <button id="oa-signoff" type="button">Sign-off</button>
+      <div id="oa-daily">Daily Hours: 0m</div>
+      <div id="oa-weekly">Weekly Hours: 0m</div>
+      <div id="oa-actions">
+        <button id="oa-clear-day" type="button">Clear Today</button>
+        <button id="oa-clear-week" type="button">Clear Week</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Centered clock & greeting -->
+  <div id="clock">
+    <div id="clock-time">--:--</div>
+    <div id="clock-date"></div>
+    <div id="clock-greeting">Good morning, Sky!</div>
+  </div>
+
+  <!-- TODO list -->
+  <div id="todo-panel">
+    <div id="todo-header">
+      <span id="todo-title">TODO</span>
+      <button id="todo-add" type="button" title="Add item">+</button>
+    </div>
+    <div id="todo-empty">Click the + button to add a todo</div>
+    <ul id="todo-list" class="hidden"></ul>
+  </div>
+
+  <div id="caption" class="hidden"></div>
+
+  <!-- First run -->
+  <div id="first-run" class="overlay hidden">
+    <div class="card">
+      <h1>Choose Background</h1>
+      <p>Choose a local image folder, or use a smooth animated color background.</p>
+      <div class="btn-row">
+        <button class="btn" id="choose-folder-1">Choose Folder</button>
+        <button class="btn secondary" id="choose-fluid">Fluid Color</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Re-authorization -->
+  <div id="perm-panel" class="overlay hidden">
+    <div class="card">
+      <h1>Authorization Needed</h1>
+      <p>The browser needs your confirmation to read the previously selected image folder.</p>
+      <div class="btn-row">
+        <button class="btn" id="authorize">Authorize</button>
+        <button class="btn secondary" id="choose-folder-2">Choose Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div id="settings-panel" class="hidden">
+    <h2>Settings</h2>
+    <div id="folder-settings">
+      <div class="folder-box">Image folder: <span id="folder-name">Not selected</span></div>
+      <div class="row">
+        <label for="chk-recursive">Include subfolders</label>
+        <input type="checkbox" id="chk-recursive" checked />
+      </div>
+      <div class="row">
+        <label for="chk-show-name">Show filename</label>
+        <input type="checkbox" id="chk-show-name" />
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="choose-folder-3">Change Folder</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="switch-mode">Switch to Fluid Color</button>
+    </div>
+    <div class="btn-row" style="margin-top:10px;">
+      <button class="btn secondary" id="close-settings">Close</button>
+    </div>
+  </div>
+
+  <button id="gear" title="Settings">⚙</button>
+  <button id="random-btn" type="button" title="Next Wallpaper">⏭</button>
+  <button id="hide-ui-btn" type="button" title="Hide UI">⛶</button>
+  <div id="status"></div>
+
+  <script src="newtab.js"></script>
+</body>
+</html>

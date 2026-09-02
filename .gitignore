@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Local / secret files
+# (Keep your WeatherAPI key out of the repo. It lives in newtab.js as WEATHERAPI_KEY.)
