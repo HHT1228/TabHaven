@@ -44,6 +44,10 @@ const todoListEl = document.getElementById('todo-list');
 const todoEmpty = document.getElementById('todo-empty');
 const todoAdd = document.getElementById('todo-add');
 const todoClearDone = document.getElementById('todo-clear-done');
+const ritualsListEl = document.getElementById('rituals-list');
+const ritualsEmptyEl = document.getElementById('rituals-empty');
+const ritualsAddEl = document.getElementById('rituals-add');
+const ritualsResetEl = document.getElementById('rituals-reset');
 const weatherPanel = document.getElementById('weather-panel');
 const sunPanel = document.getElementById('sun-panel');
 
@@ -402,6 +406,133 @@ function reorderTodo(fromId, targetId, before) {
   }
   todoSave();
   renderTodo();
+}
+
+/* ================= Rituals（每周例行清单） ================= */
+const KEY_RITUALS = 'rituals';
+const KEY_RITUALS_WEEK = 'ritualsWeek';
+
+let ritualItems = [];
+
+function ritualsSave() {
+  kvSet(KEY_RITUALS, ritualItems);
+}
+
+function updateRitualsEmpty() {
+  const empty = ritualItems.length === 0;
+  ritualsListEl.classList.toggle('hidden', empty);
+  ritualsEmptyEl.classList.toggle('hidden', !empty);
+}
+
+function createRitualItemEl(item) {
+  const li = document.createElement('li');
+  li.className = 'todo-item' + (item.done ? ' done' : '');
+  li.dataset.id = item.id;
+
+  const check = document.createElement('button');
+  check.type = 'button';
+  check.className = 'todo-check';
+  check.title = item.done ? 'Undo complete' : 'Mark complete';
+  check.addEventListener('click', () => toggleRitual(item.id));
+
+  const text = document.createElement('input');
+  text.type = 'text';
+  text.className = 'todo-text';
+  text.value = item.text;
+  text.placeholder = 'Recurring task…';
+  text.addEventListener('input', () => {
+    item.text = text.value;
+    ritualsSave();
+  });
+  text.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      text.blur();
+      addRitual();
+    } else if (e.key === 'Escape') {
+      text.blur();
+    }
+  });
+
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'todo-del';
+  del.title = 'Delete';
+  del.textContent = '×';
+  del.addEventListener('click', () => deleteRitual(item.id));
+
+  li.appendChild(check);
+  li.appendChild(text);
+  li.appendChild(del);
+  return li;
+}
+
+function renderRituals() {
+  ritualsListEl.innerHTML = '';
+  for (const item of ritualItems) {
+    ritualsListEl.appendChild(createRitualItemEl(item));
+  }
+  updateRitualsEmpty();
+}
+
+function addRitual() {
+  const item = { id: 'r' + Date.now() + Math.random().toString(36).slice(2, 7), text: '', done: false };
+  ritualItems.push(item);
+  ritualsSave();
+  const el = createRitualItemEl(item);
+  ritualsListEl.appendChild(el);
+  updateRitualsEmpty();
+  el.querySelector('.todo-text').focus();
+  ritualsListEl.scrollTop = ritualsListEl.scrollHeight;
+}
+
+function toggleRitual(id) {
+  const item = ritualItems.find((it) => it.id === id);
+  if (!item) return;
+  item.done = !item.done;
+  ritualsSave();
+  const li = ritualsListEl.querySelector(`.todo-item[data-id="${id}"]`);
+  if (li) {
+    li.classList.toggle('done', item.done);
+    li.querySelector('.todo-check').title = item.done ? 'Undo complete' : 'Mark complete';
+  }
+}
+
+function deleteRitual(id) {
+  ritualItems = ritualItems.filter((it) => it.id !== id);
+  ritualsSave();
+  const li = ritualsListEl.querySelector(`.todo-item[data-id="${id}"]`);
+  if (li) li.remove();
+  updateRitualsEmpty();
+}
+
+function resetRituals() {
+  if (ritualItems.length === 0) {
+    setStatus('No recurring tasks to reset');
+    return;
+  }
+  if (!confirm('Reset all recurring tasks for the new week?')) return;
+  for (const item of ritualItems) item.done = false;
+  ritualsSave();
+  renderRituals();
+}
+
+async function initRituals() {
+  // 每周一自动取消勾选（新的一周重新开始）
+  const currentWeekKey = oaDateKey(oaMonday(Date.now()).getTime());
+  const storedWeekKey = await kvGet(KEY_RITUALS_WEEK);
+  const stored = await kvGet(KEY_RITUALS);
+  ritualItems = Array.isArray(stored) ? stored : [];
+
+  if (storedWeekKey !== currentWeekKey) {
+    for (const item of ritualItems) item.done = false;
+    await kvSet(KEY_RITUALS, ritualItems);
+    await kvSet(KEY_RITUALS_WEEK, currentWeekKey);
+  }
+
+  renderRituals();
+  ritualsAddEl.addEventListener('click', addRitual);
+  ritualsResetEl.addEventListener('click', resetRituals);
 }
 
 /* ================= 目录扫描 ================= */
@@ -1219,6 +1350,9 @@ async function init() {
 
   // Personal OA：工作时间统计
   initOa();
+
+  // Rituals：每周例行清单
+  initRituals();
 
   // 首次使用：询问名字
   if (namePromptNeeded) {

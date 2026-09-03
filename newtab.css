@@ -245,7 +245,7 @@ body {
 }
 
 /* 隐藏所有界面元素（保留左下角三个控制按钮） */
-body.ui-hidden #todo-panel,
+body.ui-hidden #todo-stack,
 body.ui-hidden #weather-stack,
 body.ui-hidden #clock,
 body.ui-hidden #caption,
@@ -354,13 +354,21 @@ input[type="checkbox"] {
 }
 
 /* ============ 右侧 TODO List（毛玻璃面板） ============ */
-#todo-panel {
+#todo-stack {
   position: fixed;
   top: 32px;
   right: 32px;
   bottom: 32px;
   z-index: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   width: clamp(240px, 22vw, 440px);
+}
+
+#todo-panel {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: rgba(18, 20, 24, 0.45);
@@ -374,7 +382,24 @@ input[type="checkbox"] {
   overflow: hidden;
 }
 
-#todo-header {
+#rituals-panel {
+  flex: 0 0 auto;
+  max-height: 42vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(18, 20, 24, 0.45);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Segoe UI", system-ui, sans-serif;
+  overflow: hidden;
+}
+
+#todo-header,
+#rituals-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -382,7 +407,8 @@ input[type="checkbox"] {
   border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 
-#todo-title {
+#todo-title,
+#rituals-title {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -397,7 +423,9 @@ input[type="checkbox"] {
 }
 
 #todo-add,
-#todo-clear-done {
+#todo-clear-done,
+#rituals-add,
+#rituals-reset {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -413,16 +441,20 @@ input[type="checkbox"] {
   transition: background 0.15s ease;
 }
 
-#todo-clear-done {
+#todo-clear-done,
+#rituals-reset {
   font-size: 16px;
 }
 
 #todo-add:hover,
-#todo-clear-done:hover {
+#todo-clear-done:hover,
+#rituals-add:hover,
+#rituals-reset:hover {
   background: rgba(255, 255, 255, 0.28);
 }
 
-#todo-empty {
+#todo-empty,
+#rituals-empty {
   flex: 1 1 auto;
   display: flex;
   align-items: center;
@@ -433,7 +465,12 @@ input[type="checkbox"] {
   text-align: center;
 }
 
-#todo-list {
+#rituals-empty {
+  padding: 12px 16px;
+}
+
+#todo-list,
+#rituals-list {
   list-style: none;
   margin: 0;
   padding: 8px 6px;

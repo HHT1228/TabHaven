@@ -41,17 +41,31 @@
     <div id="clock-greeting" title="Click to change name">Good morning!</div>
   </div>
 
-  <!-- TODO list -->
-  <div id="todo-panel">
-    <div id="todo-header">
-      <span id="todo-title">TODO</span>
-      <div class="todo-header-actions">
-        <button id="todo-clear-done" type="button" title="Clear completed">⌧</button>
-        <button id="todo-add" type="button" title="Add item">+</button>
+  <!-- TODO + Rituals -->
+  <div id="todo-stack">
+    <div id="todo-panel">
+      <div id="todo-header">
+        <span id="todo-title">TODO</span>
+        <div class="todo-header-actions">
+          <button id="todo-clear-done" type="button" title="Clear completed">⌧</button>
+          <button id="todo-add" type="button" title="Add item">+</button>
+        </div>
       </div>
+      <div id="todo-empty">Click the + button to add a todo</div>
+      <ul id="todo-list" class="hidden"></ul>
     </div>
-    <div id="todo-empty">Click the + button to add a todo</div>
-    <ul id="todo-list" class="hidden"></ul>
+
+    <div id="rituals-panel">
+      <div id="rituals-header">
+        <span id="rituals-title">Rituals</span>
+        <div class="todo-header-actions">
+          <button id="rituals-reset" type="button" title="Reset for a new week">↻</button>
+          <button id="rituals-add" type="button" title="Add item">+</button>
+        </div>
+      </div>
+      <div id="rituals-empty">Weekly recurring tasks</div>
+      <ul id="rituals-list" class="hidden"></ul>
+    </div>
   </div>
 
   <div id="caption" class="hidden"></div>
