@@ -48,6 +48,10 @@ const ritualsListEl = document.getElementById('rituals-list');
 const ritualsEmptyEl = document.getElementById('rituals-empty');
 const ritualsAddEl = document.getElementById('rituals-add');
 const ritualsResetEl = document.getElementById('rituals-reset');
+const upcomingListEl = document.getElementById('upcoming-list');
+const upcomingEmptyEl = document.getElementById('upcoming-empty');
+const upcomingAddEl = document.getElementById('upcoming-add');
+const upcomingClearDoneEl = document.getElementById('upcoming-clear-done');
 const weatherPanel = document.getElementById('weather-panel');
 const sunPanel = document.getElementById('sun-panel');
 
@@ -533,6 +537,122 @@ async function initRituals() {
   renderRituals();
   ritualsAddEl.addEventListener('click', addRitual);
   ritualsResetEl.addEventListener('click', resetRituals);
+}
+
+/* ================= Upcoming（近期/长期事项） ================= */
+const KEY_UPCOMING = 'upcoming';
+
+let upcomingItems = [];
+
+function upcomingSave() {
+  kvSet(KEY_UPCOMING, upcomingItems);
+}
+
+function updateUpcomingEmpty() {
+  const empty = upcomingItems.length === 0;
+  upcomingListEl.classList.toggle('hidden', empty);
+  upcomingEmptyEl.classList.toggle('hidden', !empty);
+}
+
+function createUpcomingItemEl(item) {
+  const li = document.createElement('li');
+  li.className = 'todo-item' + (item.done ? ' done' : '');
+  li.dataset.id = item.id;
+
+  const check = document.createElement('button');
+  check.type = 'button';
+  check.className = 'todo-check';
+  check.title = item.done ? 'Undo complete' : 'Mark complete';
+  check.addEventListener('click', () => toggleUpcoming(item.id));
+
+  const text = document.createElement('input');
+  text.type = 'text';
+  text.className = 'todo-text';
+  text.value = item.text;
+  text.placeholder = 'Add an item…';
+  text.addEventListener('input', () => {
+    item.text = text.value;
+    upcomingSave();
+  });
+  text.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      text.blur();
+      addUpcoming();
+    } else if (e.key === 'Escape') {
+      text.blur();
+    }
+  });
+
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'todo-del';
+  del.title = 'Delete';
+  del.textContent = '×';
+  del.addEventListener('click', () => deleteUpcoming(item.id));
+
+  li.appendChild(check);
+  li.appendChild(text);
+  li.appendChild(del);
+  return li;
+}
+
+function renderUpcoming() {
+  upcomingListEl.innerHTML = '';
+  for (const item of upcomingItems) {
+    upcomingListEl.appendChild(createUpcomingItemEl(item));
+  }
+  updateUpcomingEmpty();
+}
+
+function addUpcoming() {
+  const item = { id: 'u' + Date.now() + Math.random().toString(36).slice(2, 7), text: '', done: false };
+  upcomingItems.push(item);
+  upcomingSave();
+  const el = createUpcomingItemEl(item);
+  upcomingListEl.appendChild(el);
+  updateUpcomingEmpty();
+  el.querySelector('.todo-text').focus();
+  upcomingListEl.scrollTop = upcomingListEl.scrollHeight;
+}
+
+function toggleUpcoming(id) {
+  const item = upcomingItems.find((it) => it.id === id);
+  if (!item) return;
+  item.done = !item.done;
+  upcomingSave();
+  const li = upcomingListEl.querySelector(`.todo-item[data-id="${id}"]`);
+  if (li) {
+    li.classList.toggle('done', item.done);
+    li.querySelector('.todo-check').title = item.done ? 'Undo complete' : 'Mark complete';
+  }
+}
+
+function deleteUpcoming(id) {
+  upcomingItems = upcomingItems.filter((it) => it.id !== id);
+  upcomingSave();
+  const li = upcomingListEl.querySelector(`.todo-item[data-id="${id}"]`);
+  if (li) li.remove();
+  updateUpcomingEmpty();
+}
+
+function clearCompletedUpcoming() {
+  const remaining = upcomingItems.filter((it) => !it.done);
+  if (remaining.length === upcomingItems.length) {
+    setStatus('No completed items to clear');
+    return;
+  }
+  upcomingItems = remaining;
+  upcomingSave();
+  renderUpcoming();
+}
+
+async function initUpcoming() {
+  const stored = await kvGet(KEY_UPCOMING);
+  upcomingItems = Array.isArray(stored) ? stored : [];
+  renderUpcoming();
+  upcomingAddEl.addEventListener('click', addUpcoming);
+  upcomingClearDoneEl.addEventListener('click', clearCompletedUpcoming);
 }
 
 /* ================= 目录扫描 ================= */
@@ -1353,6 +1473,9 @@ async function init() {
 
   // Rituals：每周例行清单
   initRituals();
+
+  // Upcoming：近期/长期事项
+  initUpcoming();
 
   // 首次使用：询问名字
   if (namePromptNeeded) {

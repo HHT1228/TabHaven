@@ -21,6 +21,7 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 - 🧮 **Personal OA** — a daily work-hours tracker: enter Arrive/Leave, press **Sign-off**, and it accumulates Daily & Weekly hours (Monday-based week). Lunch (12:00–13:00), pre-08:00, and post-21:30 time are handled automatically.
 - ✅ **TODO list** — frosted-glass panel; add, edit, check off (strikethrough), drag to reorder, delete, and clear all completed items in one click. Persisted.
 - 🔁 **Rituals** — a separate weekly recurring checklist. Checked items are never removed by "clear completed", and they auto-reset every Monday (or via `↻`). Persisted.
+- 📌 **Upcoming** — a list for long-term / near-term items; add, check off, delete, and clear completed items independently. Persisted.
 - 👁️ **Hide UI** — hide all widgets for a clean wallpaper; one click brings everything back.
 
 ### Design & privacy
@@ -59,6 +60,7 @@ Everything is stored locally in your browser (IndexedDB) — no accounts, no tel
 - Click the greeting to quickly open Settings and edit your name.
 - In the TODO list, click `+` to add an item and `⌧` to clear all completed items.
 - In **Rituals**, use `+` to add weekly recurring tasks and `↻` to reset them for a new week (they also reset automatically each Monday).
+- In **Upcoming**, use `+` to add long-term / near-term items and `⌧` to clear completed ones.
 - Press `⛶` to hide/show all widgets for a clean view.
 
 ### Personal OA (work-hours tracker)
